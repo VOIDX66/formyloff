@@ -1,1 +1,80 @@
-<h1> Prueba </h1> 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flor Animada</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #87CEEB;
+            margin: 0;
+        }
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let angle = 0;
+
+        function drawFlower(x, y) {
+            const stemHeight = 100;
+            const sway = Math.sin(angle) * 5;
+
+            // Tallo
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(x + sway, y);
+            ctx.lineTo(x + sway, y - stemHeight);
+            ctx.stroke();
+
+            // Hojas
+            ctx.fillStyle = "green";
+            ctx.beginPath();
+            ctx.ellipse(x + sway - 10, y - 40, 15, 8, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + sway + 10, y - 60, 15, 8, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pétalos
+            ctx.fillStyle = "yellow";
+            for (let i = 0; i < 6; i++) {
+                let petalAngle = (Math.PI / 3) * i;
+                let petalX = x + sway + Math.cos(petalAngle) * 20;
+                let petalY = y - stemHeight + Math.sin(petalAngle) * 20;
+                ctx.beginPath();
+                ctx.ellipse(petalX, petalY, 15, 10, petalAngle, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Centro de la flor
+            ctx.fillStyle = "brown";
+            ctx.beginPath();
+            ctx.arc(x + sway, y - stemHeight, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            angle += 0.03;
+            drawFlower(canvas.width / 2, canvas.height / 1.5);
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
